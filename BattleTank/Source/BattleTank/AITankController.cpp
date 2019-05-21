@@ -30,7 +30,6 @@ ATank* AAITankController::GetPlayerTank() const
 		if (ControlledTank)
 		{
 			FString TankName = ControlledTank->GetName();
-			UE_LOG(LogTemp, Warning, TEXT("AITankController Got Player Tank %s"), *TankName)
 		}
 		else
 		{
@@ -45,10 +44,26 @@ ATank* AAITankController::GetPlayerTank() const
 	}
 }
 
+void AAITankController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	//TODO: Move
+	AimTowardsPlayer();
+	//TODO: Fire when ready
+}
+
 void AAITankController::BeginPlay()
 {
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Warning, TEXT("AITankController BeginPlay called"));
-	GetControlledTank();
-	GetPlayerTank();
+}
+
+void AAITankController::AimTowardsPlayer()
+{
+	ATank* ControlledTank = GetControlledTank();
+	ATank* PlayerTank = GetPlayerTank();
+	if (PlayerTank&&ControlledTank)
+	{
+		ControlledTank->AimAt(PlayerTank->GetActorLocation());
+	}
 }

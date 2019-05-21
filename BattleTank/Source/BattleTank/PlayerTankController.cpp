@@ -2,6 +2,7 @@
 
 
 #include "PlayerTankController.h"
+#include "Runtime/Engine/Classes/Engine/World.h"
 #include "Tank.h"
 
 ATank* APlayerTankController::GetControlledTank() const
@@ -36,16 +37,21 @@ void APlayerTankController::AimTowardCrosshairs()
 	if (GetControlledTank())
 	{
 		FVector OutHitLocation;
-		GetSightRayHitLocation(OutHitLocation);
+		if (GetSightRayHitLocation(OutHitLocation))
+		{
+			GetControlledTank()->AimAt(OutHitLocation);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Target not found"));
+		}
 
 		//TODO: move barrel to aim towards target location
 	}
 }
 
-void APlayerTankController::GetLookDirection(FVector2D &ScreenPosition)
+void APlayerTankController::GetLookDirection(FVector2D &ScreenPosition, FVector &CameraWorldLocation, FVector &CameraLookDirection)
 {
-	FVector CameraWorldLocation;//out param
-	FVector CameraLookDirection;//out param
 	DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, CameraWorldLocation, CameraLookDirection);
 }
 
@@ -53,11 +59,30 @@ bool APlayerTankController::GetSightRayHitLocation(FVector& OutHitLocation)
 {
 	OutHitLocation = FVector(99.f);
 	FVector2D ScreenPosition = GetCrosshairScreenLocation();
-	GetLookDirection(ScreenPosition);
+	FVector OutCameraWorldLocation;//out param
+	FVector OutCameraLookDirection;//out param
+	GetLookDirection(ScreenPosition,OutCameraWorldLocation,OutCameraLookDirection);
+	FHitResult HitResult; //out param
+
 	//TODO: ray cast from crosshairs to world target location
+	FCollisionQueryParams CollisionQueryParams = FCollisionQueryParams(FName(TEXT("")), false, GetOwner());
+	FHitResult OutHitResult;
+	if (GetWorld()->LineTraceSingleByChannel(
+		OutHitResult,
+		OutCameraWorldLocation,
+		GetLineTraceEnd(OutCameraWorldLocation, OutCameraLookDirection),
+		ECollisionChannel::ECC_Visibility,
+		CollisionQueryParams,
+		FCollisionResponseParams()
+	))
+	{
+		OutHitLocation = OutHitResult.Location;
+		return true;
+	}
 	//if collision with landscape or tank, set OutHitLocation to collision coordinates and return true
 	//else return false
-	return true;
+	OutHitLocation = FVector(0.f);
+	return false;
 }
 
 FVector2D APlayerTankController::GetCrosshairScreenLocation()
@@ -65,4 +90,9 @@ FVector2D APlayerTankController::GetCrosshairScreenLocation()
 	int32 VeiwportX, VeiwportY; //out params
 	GetViewportSize(VeiwportX, VeiwportY);
 	return FVector2D(VeiwportX*CrosshairXLocation, VeiwportY*CrosshairYLocation);
+}
+
+FVector APlayerTankController::GetLineTraceEnd(FVector CameraWorldLocation, FVector CameraLookDirection)
+{
+	return CameraWorldLocation + LineTraceDistance * CameraLookDirection;
 }
