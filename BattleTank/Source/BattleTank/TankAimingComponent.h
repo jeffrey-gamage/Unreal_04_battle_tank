@@ -17,7 +17,7 @@ public:
 	UTankAimingComponent();
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	void UpdateTargetLocation(FVector NewTargetLocation);
+	void AimAt(FVector NewTargetLocation, float ProjectileSpeed);
 	void SetBarrelReference(UStaticMeshComponent* BarrelToSet);
 
 protected:
@@ -26,4 +26,5 @@ protected:
 
 private:
 	UStaticMeshComponent* BarrelReference;
+	void MoveBarrel(FVector BarrelDirection);
 };

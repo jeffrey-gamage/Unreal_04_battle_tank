@@ -12,7 +12,6 @@ ATank* AAITankController::GetControlledTank() const
 	if (ControlledTank)
 	{
 		FString TankName = ControlledTank->GetName();
-		UE_LOG(LogTemp, Warning, TEXT("Got Tank %s"), *TankName)
 	}
 	else
 	{
