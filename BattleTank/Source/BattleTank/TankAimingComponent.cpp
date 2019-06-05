@@ -2,7 +2,10 @@
 
 
 #include "TankAimingComponent.h"
+#include "TankBarrel.h"
+#include "TankTurret.h"
 #include "Engine/Classes/Kismet/GameplayStatics.h"
+
 
 // Sets default values for this component's properties
 UTankAimingComponent::UTankAimingComponent()
@@ -24,18 +27,15 @@ void UTankAimingComponent::BeginPlay()
 	
 }
 
-void UTankAimingComponent::MoveBarrel(FVector NewBarrelDirection)
+void UTankAimingComponent::RotateTurretAndMoveBarrel(FVector NewBarrelDirection)
 {
 	//TODO: generate FRotator for turret direction
 	//generate FRotator for barrel elevation
 	auto BarrelDirection = BarrelReference->GetForwardVector().Rotation();
 	auto DirectionToAim = NewBarrelDirection.Rotation();
 	auto DeltaRotation = DirectionToAim - BarrelDirection;
-	UE_LOG(LogTemp, Warning, TEXT("move barrel %s"), *DeltaRotation.ToString());
-		//TODO: Create Barrel Class to control min/max elevation, elevation speed
-		//TODO: move barrel the right amount this frame
-	//TODO: apply FRotator to turret 
-	//apply FRotator to barrel
+	BarrelReference->ElevateBarrel(DeltaRotation.Pitch);
+	TurretReference->RotateTurret(DeltaRotation.Yaw);
 }
 
 
@@ -67,7 +67,7 @@ void UTankAimingComponent::AimAt(FVector NewTargetLocation, float ProjectileSpee
 	);
 	if(HasFiringSolution)
 	{
-		MoveBarrel(OutProjectileVelocity.GetSafeNormal());
+		RotateTurretAndMoveBarrel(OutProjectileVelocity.GetSafeNormal());
 	}
 	else
 	{
@@ -75,8 +75,12 @@ void UTankAimingComponent::AimAt(FVector NewTargetLocation, float ProjectileSpee
 	}
 }
 
-void UTankAimingComponent::SetBarrelReference(UStaticMeshComponent * BarrelToSet)
+void UTankAimingComponent::SetBarrelReference(UTankBarrel * BarrelToSet)
 {
 	BarrelReference = BarrelToSet;
 }
 
+void UTankAimingComponent::SetTurretReference(UTankTurret * TurretToSet)
+{
+	TurretReference = TurretToSet;
+}

@@ -3,6 +3,7 @@
 
 #include "AITankController.h"
 #include "PlayerTankController.h"
+#include "Tank.h"
 #include "Runtime/Engine/Classes/GameFramework/Actor.h"
 #include "Engine/World.h"
 
