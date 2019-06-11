@@ -69,10 +69,6 @@ void UTankAimingComponent::AimAt(FVector NewTargetLocation, float ProjectileSpee
 	{
 		RotateTurretAndMoveBarrel(OutProjectileVelocity.GetSafeNormal());
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("failed to generate firing solution"));
-	}
 }
 
 void UTankAimingComponent::SetBarrelReference(UTankBarrel * BarrelToSet)

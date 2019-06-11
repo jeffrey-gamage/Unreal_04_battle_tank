@@ -18,11 +18,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EDITANYWHERE)
+	UPROPERTY(EditDefaultsOnly)
 		float CrosshairXLocation = 0.5f;
-	UPROPERTY(EDITANYWHERE)
+	UPROPERTY(EditDefaultsOnly)
 		float CrosshairYLocation = 0.333333f;
-	UPROPERTY(EDITANYWHERE)
+	UPROPERTY(EditDefaultsOnly)
 		float LineTraceDistance = 5000.f;
 	
 private:

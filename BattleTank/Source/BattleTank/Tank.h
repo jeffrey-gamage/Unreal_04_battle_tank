@@ -23,6 +23,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTimeSeconds) override;
 	UTankAimingComponent* TankAimingComponent;
 
 
@@ -43,12 +44,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Firing)
 		void Fire();
 
-	UPROPERTY(EditAnywhere, Category = Firing)
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
 		float LaunchSpeed = 5000.f;
 
 	UPROPERTY(EditAnywhere, Category = Setup)
 		TSubclassOf<AProjectile> Projectile= nullptr;
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = Firing)
+		float ReloadTime = 3.f;
+	float TimeUntilReloaded = 0.f;
 	UTankBarrel* Barrel;
 };
