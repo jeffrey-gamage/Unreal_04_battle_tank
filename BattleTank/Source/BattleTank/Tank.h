@@ -10,6 +10,7 @@ class UTankAimingComponent;
 class UTankBarrel;
 class UTankTurret;
 class AProjectile;
+class UTankMovementComponent;
 
 UCLASS()
 class BATTLETANK_API ATank : public APawn
@@ -43,7 +44,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Firing)
 		void Fire();
-
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 		float LaunchSpeed = 5000.f;
 
@@ -53,6 +53,7 @@ public:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = Firing)
 		float ReloadTime = 3.f;
+
 	float TimeUntilReloaded = 0.f;
 	UTankBarrel* Barrel;
 };

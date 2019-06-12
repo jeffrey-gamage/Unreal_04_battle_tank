@@ -6,6 +6,7 @@
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "TankBarrel.h"
 #include "Projectile.h"
+#include "TankMovementComponent.h"
 
 // Sets default values
 ATank::ATank()
@@ -13,6 +14,7 @@ ATank::ATank()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	TankAimingComponent = CreateDefaultSubobject<UTankAimingComponent>(FName("Aiming Component"));
+
 }
 
 // Called when the game starts or when spawned
@@ -58,7 +60,6 @@ void ATank::Fire()
 {
 	if (TimeUntilReloaded <= 0.f)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Firing!"));
 		auto TankShell = GetWorld()->SpawnActor<AProjectile>(Projectile, Barrel->GetSocketLocation(FName("Muzzle")), Barrel->GetSocketRotation(FName("Muzzle")));
 		TankShell->LaunchProjectile(LaunchSpeed);
 		TimeUntilReloaded = ReloadTime;

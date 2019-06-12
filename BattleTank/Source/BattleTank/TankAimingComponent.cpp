@@ -50,7 +50,6 @@ void UTankAimingComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 void UTankAimingComponent::AimAt(FVector NewTargetLocation, float ProjectileSpeed)
 {
 	if (!BarrelReference) { 
-		UE_LOG(LogTemp, Warning, TEXT("barrel not found")); 
 		return; }
 	FVector OutProjectileVelocity;
 	FVector StartLocation = BarrelReference->GetSocketLocation(FName("Muzzle"));

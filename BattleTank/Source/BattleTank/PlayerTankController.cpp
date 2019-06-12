@@ -12,17 +12,12 @@ ATank* APlayerTankController::GetControlledTank() const
 	{
 		FString TankName = ControlledTank->GetName();
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerTankController Tank not found"));
-	}
 	return ControlledTank;
 }
 
 void APlayerTankController::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("PlayerTankController BeginPlay called"));
 	GetControlledTank();
 }
 
@@ -41,12 +36,6 @@ void APlayerTankController::AimTowardCrosshairs()
 		{
 			GetControlledTank()->AimAt(OutHitLocation);
 		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Target not found"));
-		}
-
-		//TODO: move barrel to aim towards target location
 	}
 }
 
