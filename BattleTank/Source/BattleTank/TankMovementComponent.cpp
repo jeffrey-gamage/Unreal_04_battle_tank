@@ -4,13 +4,6 @@
 #include "TankTrack.h"
 #include "TankMovementComponent.h"
 
-void UTankMovementComponent::IntendMoveForward(float Throw)
-{
-	LeftTrack->SetThrottle(Throw);
-	RightTrack->SetThrottle(Throw);
-}
-
-
 void UTankMovementComponent::Initialise(UTankTrack* LeftTrackToSet, UTankTrack* RightTrackToSet)
 {
 	if (!LeftTrackToSet || !RightTrackToSet)
@@ -19,4 +12,28 @@ void UTankMovementComponent::Initialise(UTankTrack* LeftTrackToSet, UTankTrack* 
 	}
 	LeftTrack = LeftTrackToSet;
 	RightTrack = RightTrackToSet;
+}
+
+void UTankMovementComponent::RequestDirectMove(const FVector & MoveVelocity, bool BforceMaxSpeed)
+{
+	FString MoverName = GetOwner()->GetName();
+	auto TankForwardVector = GetOwner()->GetActorForwardVector().GetSafeNormal();
+	auto RequestedMoveVector = MoveVelocity.GetSafeNormal();
+	auto RequestedThrow = FVector::DotProduct(TankForwardVector, MoveVelocity);
+	UE_LOG(LogTemp, Warning, TEXT("%s Moving with Throw: %f"), *MoverName, RequestedThrow);
+	IntendMoveForward(RequestedThrow);
+}
+
+void UTankMovementComponent::IntendMoveForward(float Throw)
+{
+	Throw = FMath::Clamp(Throw, -1.f, 1.f);
+	LeftTrack->SetThrottle(Throw);
+	RightTrack->SetThrottle(Throw);
+}
+
+void UTankMovementComponent::IntendTurnRight(float Throw)
+{
+	Throw = FMath::Clamp(Throw, -1.f, 1.f);
+	LeftTrack->SetThrottle(Throw);
+	RightTrack->SetThrottle(-1.f*Throw);
 }

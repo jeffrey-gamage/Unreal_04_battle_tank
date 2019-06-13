@@ -11,10 +11,12 @@
 void AAITankController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//TODO: Move
-	AimTowardsPlayer();
-	//TODO: Fire only when ready
-	ControlledTank->Fire();
+	if (PlayerTank)
+	{
+		MoveToActor(PlayerTank,AcceptanceRadius,true,true,false);
+		AimTowardsPlayer();
+		ControlledTank->Fire();
+	}
 }
 
 void AAITankController::BeginPlay()
